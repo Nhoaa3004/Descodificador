@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Decodificador Misteriós de Binari a Text ASCII</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Share Tech Mono', monospace;
+    color: #0f0;
+    text-align: center;
+    padding: 20px;
+    background: black;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* GIF d'estrelles de fons */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: url('https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif') no-repeat center center / cover;
+    opacity: 0.15;
+    z-index: -3;
+    filter: brightness(0.4);
+  }
+
+  /* Nebulosa animada transparent */
+  #nebulosa {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 30% 30%, rgba(0,255,0,0.15), transparent 70%),
+                radial-gradient(circle at 70% 60%, rgba(0,255,0,0.1), transparent 80%);
+    animation: moveNebulosa 60s linear infinite;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  @keyframes moveNebulosa {
+    0% {background-position: 30% 30%, 70% 60%;}
+    50% {background-position: 40% 40%, 60% 55%;}
+    100% {background-position: 30% 30%, 70% 60%;}
+  }
+
+  /* Partícules petites que tremolen */
+  .particle {
+    position: fixed;
+    background: #0f0;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: flicker 2s infinite alternate;
+  }
+  @keyframes flicker {
+    0% {opacity: 0.3;}
+    100% {opacity: 1;}
+  }
+
+  textarea {
+    width: 80%;
+    height: 100px;
+    background-color: #111;
+    color: #0f0;
+    border: 2px solid #0f0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2em;
+    padding: 10px;
+    margin-bottom: 20px;
+    resize: vertical;
+    box-shadow: 0 0 10px #0f0;
+  }
+  button {
+    background-color: transparent;
+    color: #0f0;
+    border: 2px solid #0f0;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #0f0;
+  }
+  button:hover {
+    background-color: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {transform: scale(1);}
+    50% {transform: scale(1.1);}
+  }
+
+  #resultat {
+    background-color: #111;
+    padding: 15px;
+    border: 2px solid #0f0;
+    max-width: 80%;
+    margin: 0 auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1.3em;
+    box-shadow: 0 0 15px #0f0;
+  }
+
+  h1, p {
+    text-shadow: 0 0 8px #0f0;
+  }
+</style>
+</head>
+<body>
+
+<div id="nebulosa"></div>
+
+<h1>Decodificador Misteriós de Binari a Text ASCII</h1>
+<p>Introdueix el codi binari separat per espais o salts de línia:</p>
+
+<textarea id="inputBinari" placeholder="Exemple: 01001000 01101111 01101100 01100001"></textarea><br/>
+<button onclick="decodificar()">Decodifica</button>
+<div id="resultat"></div>
+
+<script>
+  function decodificar() {
+    const input = document.getElementById("inputBinari").value.trim();
+    if (!input) {
+      alert("Si us plau, introdueix un codi binari.");
+      return;
+    }
+    const binaris = input.split(/\s+/);
+    let textDecodificat = "";
+    for (let binari of binaris) {
+      if (!/^[01]{8}$/.test(binari)) {
+        document.getElementById("resultat").textContent = 
+          `Error: El bloc "${binari}" no és un byte binari vàlid (8 bits).`;
+        return;
+      }
+      let ascii = String.fromCharCode(parseInt(binari, 2));
+      textDecodificat += ascii;
+    }
+    document.getElementById("resultat").textContent = textDecodificat;
+  }
+
+  // Generar partícules aleatòries que tremolen
+  const numParticles = 40;
+  for(let i=0; i<numParticles; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 3 + 1;
+    p.style.width = `${size}px`;
+    p.style.height = `${size}px`;
+    p.style.top = `${Math.random() * 100}vh`;
+    p.style.left = `${Math.random() * 100}vw`;
+    p.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    document.body.appendChild(p);
+  }
+</script>
+
+</body>
+</html>
